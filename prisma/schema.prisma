@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,61 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model DocumentMedical {
+  id_document                  Int                            @id
+  document_path                String?                        @db.VarChar(100)
+  Dossier_Document_association Dossier_Document_association[]
+}
+
+model DossierMedical {
+  id_dossier                   Int                            @id(map: "Dossier_pkey")
+  poids                        Int?
+  taille                       Float?
+  locked                       Boolean?
+  Dossier_Document_association Dossier_Document_association[]
+  Patient                      Patient[]
+}
+
+model Dossier_Document_association {
+  id_dossier          Int
+  id_document         Int
+  id_dossier_document Int             @id
+  DocumentMedical     DocumentMedical @relation(fields: [id_document], references: [id_document], onDelete: NoAction, onUpdate: NoAction, map: "Document_fkey")
+  DossierMedical      DossierMedical  @relation(fields: [id_dossier], references: [id_dossier], onDelete: NoAction, onUpdate: NoAction, map: "Dossier_fkey")
+
+  @@index([id_document], map: "fki_Document_fkey")
+  @@index([id_dossier], map: "fki_Dossier_fkey")
+}
+
+model Medecin {
+  id_medecin  Int           @id
+  name        String?       @db.VarChar(100)
+  email       String?       @db.VarChar(100)
+  Rendez_vous Rendez_vous[]
+}
+
+model Patient {
+  id_patient       Int             @id
+  nom              String?         @db.VarChar(50)
+  prenom           String?         @db.VarChar(50)
+  email            String?         @db.VarChar(50)
+  numero_telephone String?         @db.VarChar(50)
+  password         String?         @db.VarChar(50)
+  numero_dossier   Int?
+  DossierMedical   DossierMedical? @relation(fields: [numero_dossier], references: [id_dossier], onDelete: NoAction, onUpdate: NoAction, map: "Dossier_fkey")
+  Rendez_vous      Rendez_vous[]
+}
+
+model Rendez_vous {
+  id_rendez_vous Int       @id
+  id_patient     Int?
+  id_medecin     Int?
+  date           DateTime? @db.Date
+  Medecin        Medecin?  @relation(fields: [id_medecin], references: [id_medecin], onDelete: NoAction, onUpdate: NoAction, map: "Medecin_fkey")
+  Patient        Patient?  @relation(fields: [id_patient], references: [id_patient], onDelete: NoAction, onUpdate: NoAction, map: "Patient_fkey")
+
+  @@index([id_medecin], map: "fki_Medecin_fkey")
+  @@index([id_patient], map: "fki_Patient_fkey")
 }
