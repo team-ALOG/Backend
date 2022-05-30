@@ -10,7 +10,8 @@ const getALLRendezVous = async(id) =>{
     try{
         const allRendezVous = await prisma.Rendez_vous.findMany({
             where : {
-                id_patient : Number(id)
+                id_patient : Number(id) 
+           
             }
         });
 

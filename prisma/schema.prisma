@@ -57,7 +57,7 @@ model Rendez_vous {
   id_rendez_vous Int       @id
   id_patient     Int?
   id_medecin     Int?
-  date           DateTime? @db.Date
+  date           Date? @db.Date
   Medecin        Medecin?  @relation(fields: [id_medecin], references: [id_medecin], onDelete: NoAction, onUpdate: NoAction, map: "Medecin_fkey")
   Patient        Patient?  @relation(fields: [id_patient], references: [id_patient], onDelete: NoAction, onUpdate: NoAction, map: "Patient_fkey")
 
