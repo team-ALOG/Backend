@@ -45,6 +45,9 @@ const lock = async(numero_dossier) => {
     if(numero_dossier) {
         const lock = await prisma.DossierMedical.update(
             {
+                select : {
+
+                } ,
                 where : { 
                     id_dossier : Number(numero_dossier)
     
@@ -76,12 +79,12 @@ const lock = async(numero_dossier) => {
 }
 
 
-const unlock = async(numero_dossier) => {
+const unlock = async(patient_id) => {
     try {
     const numero_dossier = await prisma.Patient.find(
         {
             where : { 
-                numero_dossier : Number(numero_dossier)
+                numero_dossier : Number(patient_id)
             }
         }
 
@@ -89,6 +92,9 @@ const unlock = async(numero_dossier) => {
     if(numero_dossier) {
         const lock = await prisma.DossierMedical.update(
             {
+                select : {
+
+                } ,
                 where : { 
                     id_dossier : Number(numero_dossier)
     
@@ -122,5 +128,7 @@ const unlock = async(numero_dossier) => {
 
 module.exports = {
     getALLRendezVousMedecin,
+    lock , 
+    unlock
    
 }

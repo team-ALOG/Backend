@@ -46,8 +46,23 @@
      return res.status(code).json(data)
  };
  
+
+ 
+ const loginMedecin = async (req, res) => {
+    // get the body of the request => validation
+    const { error } = await loginValidation(req.body);
+    if (error)
+        return res
+            .status(400)
+            .json({ success: false, errors: [{ msg: error.details[0].message }] });
+
+    const { email, password } = req.body;
+    const { code, data } = await connection.loginMedecin(email, password)
+    return res.status(code).json(data)
+};
+
  module.exports = {
     
-     login
+     login , loginMedecin
  };
  
