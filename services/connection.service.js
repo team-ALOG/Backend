@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 const login = async (email, password) => {
   try {
-    const user = await prisma.patients.findFirst({
+    const user = await prisma.Patient.findFirst({
       where: { email },
     });
 
@@ -43,11 +43,11 @@ const login = async (email, password) => {
       data: {
         success: true,
         data: {
-          id: user.agent_id,
+          id: user.id_patient,
           email: user.email,
-          phone_number: user.phone_number,
-          name: user.name,
-          family_name: user.family_name,
+          numero_telephone: user.numero_telephone,
+          nom: user.nom,
+          prenom: user.prenom,
         },
       }
     }

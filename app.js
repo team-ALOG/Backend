@@ -3,7 +3,8 @@ const cors = require("cors")
 const dotenv = require("dotenv")
 const bodyParser = require("body-parser")
 
-
+const connectionRouter = require("./routes/connection.route")
+const rendezVousRouter = require("./routes/rendez_vous.route")
 // firebase admin
 //const firebaseAdminInitializeApp = require("./config/firebase-admin.config")
 
@@ -23,6 +24,10 @@ app.use(cors())
 // Parse data as json
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+
+app.use(connectionRouter)
+app.use("/api/rendezVous", rendezVousRouter) 
+
 
 app.get("/", (req, res) => {
     res.send("Server is up and running")
