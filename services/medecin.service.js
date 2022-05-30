@@ -18,10 +18,8 @@ const getALLRendezVousMedecin = async(id) =>{
         if (allRendezVous)
         return {
             code : 200,
-            data: { success: true, 
-                data : {
-                    allRendezVous,
-                },
+            data: { 
+                success: true
             }
         };
     }catch(e){
@@ -31,6 +29,95 @@ const getALLRendezVousMedecin = async(id) =>{
             data: { success: false, errors: [{ msg: `Server error` }] }
         };
     }
+}
+
+const lock = async(numero_dossier) => {
+    try {
+    const numero_dossier = await prisma.Patient.find(
+        {
+            where : { 
+                numero_dossier : Number(numero_dossier)
+
+            }
+        }
+
+    )
+    if(numero_dossier) {
+        const lock = await prisma.DossierMedical.update(
+            {
+                where : { 
+                    id_dossier : Number(numero_dossier)
+    
+                } , 
+                data : { 
+                    locked : true
+
+                }
+            } 
+            
+    
+        )
+        return {
+            code : 200,
+            data: { success: true, 
+                
+            }
+        };
+
+    } 
+}catch(e){
+    console.error(e);
+    return {
+        code : 500,
+        data: { success: false, errors: [{ msg: `Server error` }] }
+    };
+}
+
+}
+
+
+const unlock = async(numero_dossier) => {
+    try {
+    const numero_dossier = await prisma.Patient.find(
+        {
+            where : { 
+                numero_dossier : Number(numero_dossier)
+            }
+        }
+
+    )
+    if(numero_dossier) {
+        const lock = await prisma.DossierMedical.update(
+            {
+                where : { 
+                    id_dossier : Number(numero_dossier)
+    
+                } , 
+                data : { 
+                    locked : false
+
+                }
+            } 
+            
+    
+        )
+        return {
+            code : 200,
+            data: { 
+                success: true
+            }
+        };
+
+    }
+    
+}catch(e){
+    console.error(e);
+    return {
+        code : 500,
+        data: { success: false, errors: [{ msg: `Server error` }] }
+    };
+}
+
 }
 
 module.exports = {
