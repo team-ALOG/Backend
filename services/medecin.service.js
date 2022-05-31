@@ -123,25 +123,27 @@ const getALLRendezVousMedecin = async(id) =>{
     } */
 }
 
-const lock = async(numero_doss) => {
-    try {
-    const numero_dossier = await prisma.Patient.find(
+const lock = async(patient_id) => {
+     /* try {  */
+        console.log(Number(patient_id));
+    const numero_dossier = await prisma.Patient.findFirst(
         {
             where : { 
-                numero_dossier : Number(numero_doss)
+                id_patient : Number(patient_id)
 
             }
         }
 
-    )
+     ) 
+     console.log(numero_dossier);
+
     if(numero_dossier) {
+        console.log("insiiide numero dossier");
+        console.log(numero_dossier);
         const lock = await prisma.DossierMedical.update(
             {
-                select : {
-
-                } ,
                 where : { 
-                    id_dossier : Number(numero_doss)
+                    id_dossier : Number(numero_dossier.numero_dossier)
     
                 } , 
                 data : { 
@@ -152,22 +154,46 @@ const lock = async(numero_doss) => {
             
     
         )
+        if(lock){
+            return {
+                code : 200,
+                data: { 
+                    success: true, 
+                    data : lock
+                    
+                }
+            };
+
+        }
+        else {
+            return {
+                code : 200,
+                data: { 
+                    success: false, 
+                    
+                }
+            };
+        }
+       
+
+    } else {
         return {
             code : 200,
-            data: { success: true, 
+            data: { 
+                success: false, 
                 
             }
         };
 
-    } 
-}catch(e){
+    }
+ /* }catch(e){
     console.error(e);
     return {
         code : 500,
         data: { success: false, errors: [{ msg: `Server error` }] }
     };
-}
-
+} 
+ */
 }
 
 

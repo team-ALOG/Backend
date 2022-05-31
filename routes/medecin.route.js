@@ -5,11 +5,11 @@ const RendezVousController = require("../controllers/medecin.controller");
 //get all rendez-vous
 router.get("/medecin/:medecin_id", RendezVousController.getALLRendezVousMedecin);
 
-router.get("/lock/:medecin_id", RendezVousController.lock);
+router.get("/lock/:patient_id", RendezVousController.lock);
 
-router.get("/unlock/:medecin_id", RendezVousController.unlock);
+router.get("/unlock/:patient_id", RendezVousController.unlock);
 
-router.get("getstate/:medecin_id", RendezVousController.getstate);
+router.get("getstate/:id_rendez_vous", RendezVousController.getstate);
 
 module.exports = router;
 
