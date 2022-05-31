@@ -31,12 +31,12 @@ const getALLRendezVousMedecin = async(id) =>{
     }
 }
 
-const lock = async(numero_dossier) => {
+const lock = async(numero_doss) => {
     try {
     const numero_dossier = await prisma.Patient.find(
         {
             where : { 
-                numero_dossier : Number(numero_dossier)
+                numero_dossier : Number(numero_doss)
 
             }
         }
@@ -49,7 +49,7 @@ const lock = async(numero_dossier) => {
 
                 } ,
                 where : { 
-                    id_dossier : Number(numero_dossier)
+                    id_dossier : Number(numero_doss)
     
                 } , 
                 data : { 
@@ -92,9 +92,7 @@ const unlock = async(patient_id) => {
     if(numero_dossier) {
         const lock = await prisma.DossierMedical.update(
             {
-                select : {
-
-                } ,
+                
                 where : { 
                     id_dossier : Number(numero_dossier)
     
@@ -107,6 +105,41 @@ const unlock = async(patient_id) => {
             
     
         )
+        const documentMedical = await prisma.Dossier_Document_association.findMany({ 
+            select: {
+                id_document
+            } ,
+            where : {
+             id_dossier : Number(numero_dossier)
+               
+            }
+        })
+        //todo : iterate throu findmany and 
+        const paths;
+        documentMedical.array.forEach(document => {
+            paths.add(
+                await prisma.DocumentMedical.find({ 
+                    select: {
+                        document_path
+                    } ,
+                    where : {
+                        id_document : Number(document.id_document) ;
+                       
+                    }
+                })
+                
+                
+                )
+            
+        });
+         /* foreach (dossier in documentMedical.id_document ) { 
+            
+        }  */
+
+        /* const documentMedical = await prisma.Dossier_Document_association.findMany({ 
+        
+
+        } */
         return {
             code : 200,
             data: { 
@@ -126,6 +159,8 @@ const unlock = async(patient_id) => {
 
 }
 
+
+// todo const getstate = async()
 module.exports = {
     getALLRendezVousMedecin,
     lock , 
