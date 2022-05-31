@@ -115,15 +115,15 @@ const unlock = async(patient_id) => {
             }
         })
         //todo : iterate throu findmany and 
-        const paths;
+        const paths = [];
         documentMedical.array.forEach(document => {
-            paths.add(
+            paths.push(
                 await prisma.DocumentMedical.find({ 
                     select: {
                         document_path
                     } ,
                     where : {
-                        id_document : Number(document.id_document) ;
+                        id_document : Number(document.id_document) 
                        
                     }
                 })
@@ -143,7 +143,8 @@ const unlock = async(patient_id) => {
         return {
             code : 200,
             data: { 
-                success: true
+                success: true ,
+                data : paths
             }
         };
 
@@ -161,9 +162,76 @@ const unlock = async(patient_id) => {
 
 
 // todo const getstate = async()
+const getstate = async(id_rendez_vous) => {
+    
+    const id_patient = await prisma.Rendez_vous.find(
+        {
+            where : { 
+                id_patient : Number(id_rendez_vous)
+            }
+        }
+    )
+    try {
+        const numero_dossier = await prisma.Patient.find(
+            {
+                where : { 
+                    numero_dossier : Number(patient_id)
+                }
+            }
+    
+        )
+        if(numero_dossier) {
+            const lock = await prisma.DossierMedical.find(
+                {
+                    select : {
+                        locked
+                    }
+                    
+                    where : { 
+                        id_dossier : Number(numero_dossier)
+        
+                    } , 
+                    
+                } 
+                
+        
+            )
+            if(lock.locked == true) {
+                return {
+                    code : 200,
+                    data: { 
+                        locked: true
+                    }
+                };
+            }
+            else {
+                return {
+                    code : 200,
+                    data: { 
+                        locked: false
+                    }
+                };
+
+            }
+        }
+    } catch(e) {
+        return {
+            code : 400,
+            data: { 
+                locked: true
+            }
+        };
+
+    }       
+
+}
+
+
 module.exports = {
     getALLRendezVousMedecin,
     lock , 
-    unlock
+    getstate ,
+    unlock 
+    
    
 }
