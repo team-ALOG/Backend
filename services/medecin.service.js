@@ -5,35 +5,25 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 
-const getstate = async(id_rendez_vous) => {
+const getstate = async(id_patient) => {
     
-    const id_patient = await prisma.Rendez_vous.find(
-        {
-            where : { 
-                id_patient : Number(id_rendez_vous)
-            }
-        }
-    )
-    try {
-        const numero_dossier = await prisma.Patient.find(
+    
+    /* try { */
+        const numero_dossier = await prisma.Patient.findUnique(
             {
                 where : { 
-                    numero_dossier : Number(patient_id)
+                    id_patient : Number(id_patient)
                 }
             }
     
         )
         if(numero_dossier) {
-            const lock = await prisma.DossierMedical.find(
+            const lock = await prisma.DossierMedical.findUnique(
                 {
-                    select : {
-                        locked
-                    } ,
-                    
                     where : { 
-                        id_dossier : Number(numero_dossier)
+                        id_dossier : Number(numero_dossier.numero_dossier)
         
-                    } , 
+                    } 
                     
                 } 
                 
@@ -57,7 +47,7 @@ const getstate = async(id_rendez_vous) => {
 
             }
         }
-    } catch(e) {
+    /* } catch(e) {
         return {
             code : 400,
             data: { 
@@ -65,7 +55,7 @@ const getstate = async(id_rendez_vous) => {
             }
         };
 
-    }       
+    }      */  
 
 }
 

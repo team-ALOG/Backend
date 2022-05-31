@@ -26,7 +26,7 @@ const unlock = async (req, res) => {
 
 const getstate = async (req, res) => {
 
-    const { code, data } = await rendezVousService.getstate(req.params.id_rendez_vous)
+    const { code, data } = await rendezVousService.getstate(req.params.id_patient)
     return res.status(code).json(data) 
     
 }

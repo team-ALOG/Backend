@@ -9,7 +9,7 @@ router.get("/lock/:patient_id", RendezVousController.lock);
 
 router.get("/unlock/:patient_id", RendezVousController.unlock);
 
-router.get("getstate/:id_rendez_vous", RendezVousController.getstate);
+router.get("/getstate/:id_patient", RendezVousController.getstate);
 
 module.exports = router;
 
