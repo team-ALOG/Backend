@@ -28,7 +28,7 @@ const getstate = async(id_rendez_vous) => {
                 {
                     select : {
                         locked
-                    }
+                    } ,
                     
                     where : { 
                         id_dossier : Number(numero_dossier)
@@ -216,13 +216,16 @@ const unlock = async(patient_id) => {
 
     }
     
-}catch(e){
+}
+catch(e){
     console.error(e);
     return {
         code : 500,
         data: { success: false, errors: [{ msg: `Server error` }] }
     };
 }
+}
+
 
 
 
