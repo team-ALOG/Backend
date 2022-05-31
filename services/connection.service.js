@@ -13,7 +13,8 @@ const login = async (email, password) => {
       return {
         code: 400,
         data: {
-          success: false, errors: [{ msg: `User doesn't exist` }]
+          success: false, errors: [{ msg: `User doesn't exist` }] ,
+          data : user
         }
       }
 
@@ -23,7 +24,8 @@ const login = async (email, password) => {
       return {
         code: 400,
         data: {
-          success: false, errors: [{ msg: "Email or password incorrect" }]
+          success: false, errors: [{ msg: "Email or password incorrect" }] , 
+          data: user
         }
       }
 

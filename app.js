@@ -31,7 +31,7 @@ app.use(connectionRouter)
 app.use(medecinRouter)
 
 
-app.use("/api/rendezVous", rendezVousRouter) 
+app.use(rendezVousRouter) 
 
 
 app.get("/", (req, res) => {
