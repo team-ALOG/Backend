@@ -5,6 +5,7 @@ const bodyParser = require("body-parser")
 
 const connectionRouter = require("./routes/connection.route")
 const rendezVousRouter = require("./routes/rendez_vous.route")
+const medecinRouter = require("./routes/medecin.route")
 
 // firebase admin
 //const firebaseAdminInitializeApp = require("./config/firebase-admin.config")
@@ -27,6 +28,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 app.use(connectionRouter)
+app.use(medecinRouter)
+
+
 app.use("/api/rendezVous", rendezVousRouter) 
 
 
