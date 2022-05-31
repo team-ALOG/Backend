@@ -1,6 +1,6 @@
 
 
-GET http://localhost:3000/lock/1
+GET http://localhost:3000/unlock/1
 
 
 

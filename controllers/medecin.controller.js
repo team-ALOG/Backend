@@ -19,7 +19,7 @@ const lock = async (req, res) => {
 
 const unlock = async (req, res) => {
 
-    const { code, data } = await rendezVousService.lock(req.params.patient_id)
+    const { code, data } = await rendezVousService.unlock(req.params.patient_id)
     return res.status(code).json(data) 
     
 }

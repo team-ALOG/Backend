@@ -125,7 +125,6 @@ const getALLRendezVousMedecin = async(id) =>{
 
 const lock = async(patient_id) => {
      /* try {  */
-        console.log(Number(patient_id));
     const numero_dossier = await prisma.Patient.findFirst(
         {
             where : { 
@@ -135,11 +134,8 @@ const lock = async(patient_id) => {
         }
 
      ) 
-     console.log(numero_dossier);
 
     if(numero_dossier) {
-        console.log("insiiide numero dossier");
-        console.log(numero_dossier);
         const lock = await prisma.DossierMedical.update(
             {
                 where : { 
@@ -148,7 +144,6 @@ const lock = async(patient_id) => {
                 } , 
                 data : { 
                     locked : true
-
                 }
             } 
             
@@ -198,11 +193,11 @@ const lock = async(patient_id) => {
 
 
 const unlock = async(patient_id) => {
-    try {
-    const numero_dossier = await prisma.Patient.find(
+    /* try { */
+    const numero_dossier = await prisma.Patient.findFirst(
         {
             where : { 
-                numero_dossier : Number(patient_id)
+                id_patient : Number(patient_id)
             }
         }
 
@@ -212,7 +207,7 @@ const unlock = async(patient_id) => {
             {
                 
                 where : { 
-                    id_dossier : Number(numero_dossier)
+                    id_dossier : Number(numero_dossier.numero_dossier)
     
                 } , 
                 data : { 
@@ -222,39 +217,29 @@ const unlock = async(patient_id) => {
             } 
             
     
-        )
+        ) // locked updated 
         const documentMedical = await prisma.Dossier_Document_association.findMany({ 
-            select: {
-                id_document
-            } ,
+           
             where : {
-             id_dossier : Number(numero_dossier)
+             id_dossier : Number(numero_dossier.numero_dossier)
                
             }
         })
         //todo : iterate throu findmany and 
         const paths = [];
-        documentMedical.array.forEach(document => {
-            let doc = prisma.DocumentMedical.find({ 
-                select: {
-                    document_path
-                } ,
+        for(let i=0 ; i<documentMedical.length ; i++) {
+            let doc = await prisma.DocumentMedical.findFirst({ 
                 where : {
-                    id_document : Number(document.id_document) 
+                    id_document : Number(documentMedical[i].id_document) 
                    
                 }
-            })
-            paths.push(doc)
-            
-        });
-         /* foreach (dossier in documentMedical.id_document ) { 
-            
-        }  */
+            }) ; 
+            paths.push(doc) ;
 
-        /* const documentMedical = await prisma.Dossier_Document_association.findMany({ 
-        
-
-        } */
+        }
+       
+      
+         
         return {
             code : 200,
             data: { 
@@ -265,14 +250,14 @@ const unlock = async(patient_id) => {
 
     }
     
-}
+/* }
 catch(e){
     console.error(e);
     return {
         code : 500,
         data: { success: false, errors: [{ msg: `Server error` }] }
     };
-}
+} */
 }
 
 
