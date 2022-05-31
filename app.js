@@ -5,6 +5,7 @@ const bodyParser = require("body-parser")
 
 const connectionRouter = require("./routes/connection.route")
 const rendezVousRouter = require("./routes/rendez_vous.route")
+
 // firebase admin
 //const firebaseAdminInitializeApp = require("./config/firebase-admin.config")
 
@@ -33,6 +34,9 @@ app.get("/", (req, res) => {
     res.send("Server is up and running")
 })
 
+const connection = require("./services/connection.service")
+const hash = connection.hash()
+console.log(toString(hash))
 
 app.listen(app.get("port"), () => {
     console.log(`App is served under ${app.get("port")} port`);

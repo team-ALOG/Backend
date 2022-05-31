@@ -37,7 +37,7 @@ model Medecin {
   id_medecin  Int           @id
   name        String?       @db.VarChar(100)
   email       String?       @db.VarChar(100)
-  password    String?       @db.VarChar(100)
+  password    String?       @db.VarChar(200)
   Rendez_vous Rendez_vous[]
 }
 
@@ -47,7 +47,7 @@ model Patient {
   prenom           String?         @db.VarChar(50)
   email            String?         @db.VarChar(50)
   numero_telephone String?         @db.VarChar(50)
-  password         String?         @db.VarChar(50)
+  password         String?         @db.VarChar(200)
   numero_dossier   Int?
   DossierMedical   DossierMedical? @relation(fields: [numero_dossier], references: [id_dossier], onDelete: NoAction, onUpdate: NoAction, map: "Dossier_fkey")
   Rendez_vous      Rendez_vous[]
