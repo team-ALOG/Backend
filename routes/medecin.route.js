@@ -11,5 +11,7 @@ router.get("/unlock/:medecin_id", RendezVousController.unlock(req, res));
 
 router.get("getstate/:medecin_id", RendezVousController.getstate(req, res));
 
+module.exports = router;
+
 
 

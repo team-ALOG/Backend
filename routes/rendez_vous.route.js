@@ -7,3 +7,4 @@ router.get("/:patient_id", RendezVousController.getALLRendezVous);
 
 
 
+module.exports = router;

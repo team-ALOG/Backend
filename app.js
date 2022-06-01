@@ -5,8 +5,7 @@ const bodyParser = require("body-parser")
 
 const connectionRouter = require("./routes/connection.route")
 const rendezVousRouter = require("./routes/rendez_vous.route")
-// firebase admin
-//const firebaseAdminInitializeApp = require("./config/firebase-admin.config")
+const pushNotifRouter = require("./routes/app-routes")
 
 // Configure dotenv
 dotenv.config({
@@ -27,7 +26,7 @@ app.use(bodyParser.json())
 
 app.use(connectionRouter)
 app.use("/api/rendezVous", rendezVousRouter) 
-
+app.use(pushNotifRouter)
 
 app.get("/", (req, res) => {
     res.send("Server is up and running")
