@@ -5,35 +5,25 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 
-const getstate = async(id_rendez_vous) => {
+const getstate = async(id_patient) => {
     
-    const id_patient = await prisma.Rendez_vous.find(
-        {
-            where : { 
-                id_patient : Number(id_rendez_vous)
-            }
-        }
-    )
-    try {
-        const numero_dossier = await prisma.Patient.find(
+    
+    /* try { */
+        const numero_dossier = await prisma.Patient.findUnique(
             {
                 where : { 
-                    numero_dossier : Number(patient_id)
+                    id_patient : Number(id_patient)
                 }
             }
     
         )
         if(numero_dossier) {
-            const lock = await prisma.DossierMedical.find(
+            const lock = await prisma.DossierMedical.findUnique(
                 {
-                    select : {
-                        locked
-                    } ,
-                    
                     where : { 
-                        id_dossier : Number(numero_dossier)
+                        id_dossier : Number(numero_dossier.numero_dossier)
         
-                    } , 
+                    } 
                     
                 } 
                 
@@ -57,7 +47,7 @@ const getstate = async(id_rendez_vous) => {
 
             }
         }
-    } catch(e) {
+    /* } catch(e) {
         return {
             code : 400,
             data: { 
@@ -65,92 +55,141 @@ const getstate = async(id_rendez_vous) => {
             }
         };
 
-    }       
+    }      */  
 
 }
 
 
 
 const getALLRendezVousMedecin = async(id) =>{
+    let idd = Number(id) ;
     
-    try{
-        const allRendezVous = await prisma.Rendez_vous.findMany({
+    /* try{ */
+        const allRendezVous = await prisma.$queryRaw`select date, nom, prenom, email, numero_telephone, numero_dossier FROM (select * from "Rendez_vous" WHERE id_medecin=${idd}) as "A" INNER JOIN "Patient" ON "A"."id_patient" = "Patient"."id_patient"`
+        /* const allRendezVous =await  prisma.Rendez_vous.findMany({
             where : {
                 id_medecin : Number(id) ,
-                date : Date.now(),
             }
-        });
+        });  */
+       /* const today = new Date();
+        const month = Number(today.getMonth()) +1 ; 
+        const day = Number(today.getDate())  ;
+        const year =  Number(today.getFullYear()) ;  */ 
+       /*  console.log(month) ;
+        console.log(day) ; 
+        console.log(year); */
+    //   const allRendezVous = await prisma.$queryRaw`SELECT * FROM (SELECT *, EXTRACT(DAY FROM date) AS DAY,  EXTRACT(MONTH FROM date) AS MONTH, EXTRACT(YEAR FROM date) AS YEAR FROM "Rendez_vous" ) AS A WHERE "month"=${month} AND "year"=${year} AND "day" = ${day} `
+      //const allRendezVous = await prisma.$queryRaw`SELECT * FROM (SELECT *, EXTRACT(DAY FROM date) AS DAY,  EXTRACT(MONTH FROM date) AS MONTH, EXTRACT(YEAR FROM date) AS YEAR FROM "Rendez_vous" ) AS A WHERE year=${year} AND day = '31' `
+ 
+     //  const test = await prisma.$queryRaw`SELECT *, EXTRACT(DAY FROM date) AS DAY,  EXTRACT(MONTH FROM date) AS MONTH, EXTRACT(YEAR FROM date) AS YEAR FROM "Rendez_vous"`
+
+      //   const allRendezVous = await prisma.$queryRaw`SELECT EXTRACT(DAY FROM date) AS DAY,  EXTRACT(MONTH FROM date) AS MONTH, EXTRACT(YEAR FROM date) AS YEAR FROM "Rendez_vous" WHERE MONTH=${month} AND YEAR=${year} AND DAY = ${day}`
+
 
         if (allRendezVous)
-        return {
-            code : 200,
-            data: { 
-                success: true
-            }
-        };
-    }catch(e){
+        {
+            
+
+            return {
+                code : 200,
+                data: { 
+                    success: true , 
+                    data : allRendezVous
+                }
+            };
+
+        }
+        else {
+            return {
+                code : 400,
+                
+            };
+        }
+       
+   /*  }catch(e){
         console.error(e);
         return {
             code : 500,
             data: { success: false, errors: [{ msg: `Server error` }] }
         };
-    }
+    } */
 }
 
-const lock = async(numero_doss) => {
-    try {
-    const numero_dossier = await prisma.Patient.find(
+const lock = async(patient_id) => {
+     /* try {  */
+    const numero_dossier = await prisma.Patient.findFirst(
         {
             where : { 
-                numero_dossier : Number(numero_doss)
+                id_patient : Number(patient_id)
 
             }
         }
 
-    )
+     ) 
+
     if(numero_dossier) {
         const lock = await prisma.DossierMedical.update(
             {
-                select : {
-
-                } ,
                 where : { 
-                    id_dossier : Number(numero_doss)
+                    id_dossier : Number(numero_dossier.numero_dossier)
     
                 } , 
                 data : { 
                     locked : true
-
                 }
             } 
             
     
         )
+        if(lock){
+            return {
+                code : 200,
+                data: { 
+                    success: true, 
+                    data : lock
+                    
+                }
+            };
+
+        }
+        else {
+            return {
+                code : 200,
+                data: { 
+                    success: false, 
+                    
+                }
+            };
+        }
+       
+
+    } else {
         return {
             code : 200,
-            data: { success: true, 
+            data: { 
+                success: false, 
                 
             }
         };
 
-    } 
-}catch(e){
+    }
+ /* }catch(e){
     console.error(e);
     return {
         code : 500,
         data: { success: false, errors: [{ msg: `Server error` }] }
     };
-}
-
+} 
+ */
 }
 
 
 const unlock = async(patient_id) => {
-    try {
-    const numero_dossier = await prisma.Patient.find(
+    /* try { */
+    const numero_dossier = await prisma.Patient.findFirst(
         {
             where : { 
-                numero_dossier : Number(patient_id)
+                id_patient : Number(patient_id)
             }
         }
 
@@ -160,7 +199,7 @@ const unlock = async(patient_id) => {
             {
                 
                 where : { 
-                    id_dossier : Number(numero_dossier)
+                    id_dossier : Number(numero_dossier.numero_dossier)
     
                 } , 
                 data : { 
@@ -170,42 +209,29 @@ const unlock = async(patient_id) => {
             } 
             
     
-        )
+        ) // locked updated 
         const documentMedical = await prisma.Dossier_Document_association.findMany({ 
-            select: {
-                id_document
-            } ,
+           
             where : {
-             id_dossier : Number(numero_dossier)
+             id_dossier : Number(numero_dossier.numero_dossier)
                
             }
         })
         //todo : iterate throu findmany and 
         const paths = [];
-        documentMedical.array.forEach(document => {
-            paths.push(
-                await prisma.DocumentMedical.find({ 
-                    select: {
-                        document_path
-                    } ,
-                    where : {
-                        id_document : Number(document.id_document) 
-                       
-                    }
-                })
-                
-                
-                )
-            
-        });
-         /* foreach (dossier in documentMedical.id_document ) { 
-            
-        }  */
+        for(let i=0 ; i<documentMedical.length ; i++) {
+            let doc = await prisma.DocumentMedical.findFirst({ 
+                where : {
+                    id_document : Number(documentMedical[i].id_document) 
+                   
+                }
+            }) ; 
+            paths.push(doc) ;
 
-        /* const documentMedical = await prisma.Dossier_Document_association.findMany({ 
-        
-
-        } */
+        }
+       
+      
+         
         return {
             code : 200,
             data: { 
@@ -216,14 +242,14 @@ const unlock = async(patient_id) => {
 
     }
     
-}
+/* }
 catch(e){
     console.error(e);
     return {
         code : 500,
         data: { success: false, errors: [{ msg: `Server error` }] }
     };
-}
+} */
 }
 
 

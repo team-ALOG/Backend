@@ -12,7 +12,8 @@ const login = async (email, password) => {
       return {
         code: 400,
         data: {
-          success: false, errors: [{ msg: `User doesn't exist` }]
+          success: false, errors: [{ msg: `User doesn't exist` }] ,
+          data : user
         }
       }
 
@@ -22,7 +23,8 @@ const login = async (email, password) => {
       return {
         code: 400,
         data: {
-          success: false, errors: [{ msg: "Email or password incorrect" }]
+          success: false, errors: [{ msg: "Email or password incorrect" }] , 
+          data: user
         }
       }
 
@@ -119,4 +121,14 @@ const loginMedecin = async (email, password) => {
     }
   }
 }
-module.exports = { login  , loginMedecin}
+
+const hash = async(req, res) => {
+ 
+const password = "hibahiba"
+const salt = await bcrypt.genSalt(parseInt(process.env.SALT) || 10);
+const passwordHash = await bcrypt.hash(password, salt);
+ console.log(passwordHash) 
+/* return passwordHash 
+ */
+}
+module.exports = { login  , loginMedecin , hash}

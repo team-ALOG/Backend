@@ -12,21 +12,21 @@ const getALLRendezVousMedecin = async (req, res) => {
 
 const lock = async (req, res) => {
 
-    const { code, data } = await rendezVousService.lock(req.params.numero_doss)
+    const { code, data } = await rendezVousService.lock(req.params.patient_id)
     return res.status(code).json(data) 
     
 }
 
 const unlock = async (req, res) => {
 
-    const { code, data } = await rendezVousService.lock(req.params.patient_id)
+    const { code, data } = await rendezVousService.unlock(req.params.patient_id)
     return res.status(code).json(data) 
     
 }
 
 const getstate = async (req, res) => {
 
-    const { code, data } = await rendezVousService.getstate(req.params.id_rendez_vous)
+    const { code, data } = await rendezVousService.getstate(req.params.id_patient)
     return res.status(code).json(data) 
     
 }
