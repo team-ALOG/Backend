@@ -64,7 +64,7 @@ const getstate = async(id_patient) => {
 const getALLRendezVousMedecin = async(id) =>{
     
     /* try{ */
-        const allRendezVous = await prisma.$queryRaw`select date, nom, prenom,email, numero_telephone, numero_dossier FROM "Rendez_vous" INNER JOIN "Patient" ON "Rendez_vous"."id_patient" = "Patient"."id_patient"`
+        const allRendezVous = await prisma.$queryRaw`select date, nom, prenom, email, numero_telephone, numero_dossier FROM (select * from "Rendez_vous" WHERE id_medecin=1) as "A" INNER JOIN "Patient" ON "A"."id_patient" = "Patient"."id_patient"`
         /* const allRendezVous =await  prisma.Rendez_vous.findMany({
             where : {
                 id_medecin : Number(id) ,
