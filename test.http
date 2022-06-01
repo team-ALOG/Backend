@@ -1,6 +1,6 @@
 
 
-GET http://localhost:3000/getstate/1
+GET http://localhost:3000/api/1
 
 
 

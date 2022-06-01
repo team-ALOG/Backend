@@ -6,14 +6,16 @@ const prisma = new PrismaClient()
 
 
 const getALLRendezVous = async(id) =>{
+    let idd = Number(id) ; 
     
     /* try{ */
-        const allRendezVous = await prisma.Rendez_vous.findMany({
+        const allRendezVous = await prisma.$queryRaw`select date, name, email FROM (select * from "Rendez_vous" WHERE id_patient=${idd}) as "A" INNER JOIN "Medecin" ON "A"."id_medecin" = "Medecin"."id_medecin"`
+        /* prisma.Rendez_vous.findMany({
             where : {
                 id_patient : Number(id) 
            
             }
-        });
+        }); */
 
         if (allRendezVous) {
             return {
